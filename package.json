@@ -1,0 +1,25 @@
+{
+  "name": "adventure-planner",
+  "version": "1.0.0",
+  "description": "This is a place where you can document and organize your gear, make plans and log trips, follow your training regiments",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MikeyP957/adventure-planner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MikeyP957/adventure-planner/issues"
+  },
+  "homepage": "https://github.com/MikeyP957/adventure-planner#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.12.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.3"
+  }
+}
