@@ -9,9 +9,9 @@ const config = {
   authDomain: "adventure-planner-fb111.firebaseapp.com",
   projectId: "adventure-planner-fb111",
   storageBucket: "adventure-planner-fb111.appspot.com",
-  messagingSenderId: "700952279621",
-  appId: "1:700952279621:web:dc444bbe408ff62e02c12c",
-  measurementId: "G-YDQFRZ9WC5"
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
 const firebase = require('firebase')
@@ -74,7 +74,7 @@ app.post('/signup', (req, res) => {
   // validate Data
  db.doc(`/users/${newUser.handle}`).get()
   .then(doc => {
-    if(doc.exists){
+    if(doc.exists){ // makes username unique 
       return res.status(400).json({handle: 'this handle is already taken'})
     } else{
       return firebase
