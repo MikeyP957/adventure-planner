@@ -2,9 +2,10 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const app = require('express')();
 
+admin.initializeApp();
 
 const config = {
-  apiKey: "AIzaSyC18aKGRNIsoLNr3NFxjxmO6gKJyLYfY70",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "adventure-planner-fb111.firebaseapp.com",
   projectId: "adventure-planner-fb111",
   storageBucket: "adventure-planner-fb111.appspot.com",
@@ -18,7 +19,6 @@ firebase.initializeApp(config)
 
 const db = admin.firestore();
 
-admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -72,15 +72,26 @@ app.post('/signup', (req, res) => {
   };
 
   // validate Data
-  firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
-    .then( data => {
-      return res.status(201).json({message: `user ${data.user.uid} signed up successfully`})
+ db.doc(`/users/${newUser.handle}`).get()
+  .then(doc => {
+    if(doc.exists){
+      return res.status(400).json({handle: 'this handle is already taken'})
+    } else{
+      return firebase
+      .auth()
+      .createUserWithEmailAndPassword(newUser.email, newUser.password)
+    }
+  })
+    .then(data => {
+      return data.user.getIdToken();
+    })
+    .then(token => {
+      return res.status(201).json({ token })
     })
     .catch(err => {
-      console.error(err);
-      return res.status(500).json({error: err.code})
+      console.error(err)
+      return res.status(500).json({error: err })
     })
-
 })
 
 
