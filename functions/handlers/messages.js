@@ -39,3 +39,32 @@ exports.postOneMessage = (req, res) => {
         res.status(500).json({error: `There is an error: ${err}`});
       });
 };
+
+exports.getOneMessage = (req, res) => {
+  let messageData = {};
+  db.doc(`/messages/${req.params.messageId}`).get()
+  .then(doc => {
+    console.log("document: ",doc)
+    if(!doc.exists){
+      return res.status(404).json({error: 'message not found'})
+    }
+    messageData = doc.data();
+    messageData.messageId = doc.id;
+    return db
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
+      .where('messageId', '==', req.params.messageId)
+      .get();
+  })
+  .then(data => {
+    messageData.comments = [];
+    data.forEach(doc => {
+      messageData.comments.push(doc.data())
+    })
+    return res.json(messageData)
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: err.code})
+  })
+}
