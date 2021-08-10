@@ -184,3 +184,26 @@ exports.unlikeMessage = (req, res) => {
       res.status(500).json({error:err.code})
     })
 }
+
+exports.deleteMessage = (req, res) => {
+  const document = db.doc(`/messages/${req.params.messageId}`);
+
+  document.get()
+    .then(doc => {
+      if(!doc.exists){
+        return res.status(400).json({error: 'message not found'});
+      }
+      if(doc.data().userHandle !== req.user.handle) {
+        return res.status(400).json({error: 'Unauthorized'});
+      } else {
+        return document.delete()
+      }
+    })
+    .then(() => {
+      return res.json({message: "Message deleted successfully"})
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({error: err.code});
+    })
+}

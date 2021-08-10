@@ -3,7 +3,7 @@ const functions = require("firebase-functions");
 const app = require("express")();
 
 const FBAuth = require("./util/fbAuth");
-const {getAllMessages, postOneMessage, getOneMessage, commentOnMessage, likeMessage, unlikeMessage} = require("./handlers/messages");
+const {getAllMessages, postOneMessage, getOneMessage, commentOnMessage, likeMessage, unlikeMessage, deleteMessage} = require("./handlers/messages");
 const {signup, login, uploadImage, addUserDetails, getAuthenticatedUser} = require("./handlers/users");
 
 
@@ -18,6 +18,7 @@ app.post("/messages", FBAuth, postOneMessage);
 // comment on message
 app.post(`/messages/:messagesId/comment`, FBAuth, commentOnMessage)
 //delete
+app.delete('/messages/:messageId', FBAuth, deleteMessage)
 
 // user routes
 app.get('/user', FBAuth, getAuthenticatedUser)
