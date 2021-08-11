@@ -1,5 +1,6 @@
+/* eslint-disable */
 const isEmail = (email) => {
-  const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   if (email.match(emailRegEx)) return true;
   else return false;
@@ -44,15 +45,16 @@ exports.validateLoginData = (data) => {
 };
 
 exports.reduceUserDetails = (data) => {
-  let userDetails = {};
+  const userDetails = {};
 
-  if(!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
-  if(!isEmpty(data.website.trim())) {
-    if(data.website.trim().substring(0, 4) !== 'http'){ //check to see if website is http
-      userDetails.website = `http://${data.website.trim()}`
+  if (!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
+  if (!isEmpty(data.website.trim())) {
+    if (data.website.trim().substring(0, 4) !== "http") {
+      // check to see if website is http
+      userDetails.website = `http://${data.website.trim()}`;
     } else userDetails.website = data.website;
   }
-  if(!isEmpty(data.location.trim())) userDetails.location = data.location;
+  if (!isEmpty(data.location.trim())) userDetails.location = data.location;
 
   return userDetails;
-}
+};
