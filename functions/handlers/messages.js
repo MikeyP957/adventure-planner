@@ -1,5 +1,4 @@
 const {db} = require("../util/admin");
-// messagesId refers to the table, messageId is stored on a comment etc.
 exports.getAllMessages = (req, res) => {
   db
       .collection("messages")
@@ -47,7 +46,7 @@ exports.postOneMessage = (req, res) => {
 
 exports.getOneMessage = (req, res) => {
   let messageData = {};
-  db.doc(`/messages/${req.params.messagesId}`).get()
+  db.doc(`/messages/${req.params.messageId}`).get()
       .then((doc) => {
         console.log("document: ", doc);
         if (!doc.exists) {
@@ -58,7 +57,7 @@ exports.getOneMessage = (req, res) => {
         return db
             .collection("comments")
             .orderBy("createdAt", "desc")
-            .where("messageId", "==", req.params.messagesId)
+            .where("messageId", "==", req.params.messageId)
             .get();
       })
       .then((data) => {
@@ -83,22 +82,23 @@ exports.commentOnMessage = (req, res) => {
     body: req.body.body,
     createdAt: new Date().toISOString(),
     userHandle: req.user.handle,
-    messageId: req.params.messagesId,
+    messageId: req.params.messageId,
     userImage: req.user.imageUrl,
   };
 
-  db.doc(`/messages/${req.params.messagesId}`)
+  db.doc(`/messages/${req.params.messageId}`)
       .get()
       .then((doc) => {
-        console.log("doc: ", doc);
         if (!doc.exists) {
           return res.status(404).json({error: "Message not found"});
         }
         return doc.ref.update({commentCount: doc.data().commentCount + 1});
       })
+
       .then(() => {
         console.log("comment: ", newComment);
         res.json(newComment);
+        return db.collection("comments").add(newComment);
       })
       .catch((err) => {
         console.error(err);
