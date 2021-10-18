@@ -7,4 +7,9 @@
   sans-serif;
  }
 
+ .container {
+   margin: 80px auto 0px auto;
+   max-width: 1200px;
+ }
+
 
